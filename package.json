@@ -1,0 +1,12 @@
+{
+    "name": "s3-massage", 
+    "version": "0.0.1", 
+    "private": true, 
+    "main": "s3-stream.js",
+    "dependencies": {
+      "knox": "*",
+      "knox-copy": "*",
+      "s3-lister": "*",
+      "underscore": "*"
+  }
+}
