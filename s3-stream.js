@@ -1,22 +1,22 @@
 //global
-secret = require('./sec').secret;
+secret = require('./sec');
 ///////////
 
+//libs
 var knox = require('knox'),
     _ = require('underscore'),
     fs = require('fs'),
     s3Lister = require('s3-lister');
+///////////
 
 var load_bucket = function(bucket){
     var credentials = {};
     credentials.bucket = bucket;
-    credentials.secure = false;
     _.map(secret, function(val, key){
         credentials[key] = val;
     });
     return knox.createClient(credentials);
 };
-
 
 
 var copy_data = function(origin_key, bucket){
@@ -31,6 +31,28 @@ var copy_data = function(origin_key, bucket){
 
 };
 
+var size_sel = function(size) {
+    switch(size) {
+        case "200":
+            return "medium";
+        case "90":
+            return "small";
+        case "0":
+            return "original";
+    }
+};
+
+var copy_data_nmisstatic =  function(original_key, bucket) {
+    //facimg/0/0/1305196040042_1.jpg
+    var re = /^facimg\/([0-9a-f])\/([0-9]+)\/([0-9_]+\.jpg)$/;
+    var match = re.exec(original_key);
+    if (match) {
+        var size = size_sel(match[2]);
+        var photo = match[3];
+        var dest_key = size + '/' + photo;
+        bucket.copyTo(original_key, 'nmisfac', dest_key).end();
+    }
+};
 
 var run_copy = function(){
     var formhub = load_bucket('formhub');
@@ -50,13 +72,31 @@ var run_copy = function(){
     });
 };
 
-var run_delete = function(){
-    var nmisfac= load_bucket('nmisfac');
-    var lister = new s3Lister(nmisfac, {prefix: ''});
+var run_copy_nmisstatic = function() {
+    var nmisstatic = load_bucket('nmisstatic');
+    var lister = new s3Lister(nmisstatic, {prefix: 'facimg'});
+    var counter = 0;
+    lister
+        .on('data', function(data) {
+            copy_data_nmisstatic(data.Key, nmisstatic);
+            counter++;
+            console.log(counter);
+        })
+        .on('error', function (err){
+            console.log(err);
+        })
+        .on('end', function () {
+            console.log('done');
+    });
+};
+
+var run_delete = function(bucket_name, prefix){
+    var bucket = load_bucket(bucket_name);
+    var lister = new s3Lister(bucket, {prefix: '' + prefix});
     var counter = 0;
     lister
         .on('data', function (data){
-            nmisfac.del(data.Key).end();
+            bucket.del(data.Key).end();
             counter++;
             console.log(counter);
         })
@@ -69,4 +109,4 @@ var run_delete = function(){
 
 };
 
-run_delete();
+run_copy_nmisstatic();

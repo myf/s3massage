@@ -5,7 +5,6 @@
     "main": "s3-stream.js",
     "dependencies": {
       "knox": "*",
-      "knox-copy": "*",
       "s3-lister": "*",
       "underscore": "*"
   }
