@@ -15,7 +15,8 @@ var load_bucket = function(bucket){
     _.map(secret, function(val, key){
         credentials[key] = val;
     });
-    return knox.createClient(credentials);
+    var s3 = knox.createClient(credentials);
+    return s3;
 };
 
 
@@ -27,8 +28,12 @@ var copy_data = function(origin_key, bucket){
     var id = id_list[0];
     var size = id_list[1] ? id_list[1] : 'original';
     var dest_key = size + '/' + photo_file;
-    bucket.copyTo(origin_key, 'nmisfac', dest_key).end();
-
+    console.log(origin_key, dest_key);
+    bucket.copyTo(origin_key, 'nmisfac', dest_key, function(err, ret) {
+        if (err) {
+            console.log(err);
+        }
+    }).end();
 };
 
 var size_sel = function(size) {
@@ -43,47 +48,60 @@ var size_sel = function(size) {
 };
 
 var copy_data_nmisstatic =  function(original_key, bucket) {
-    //facimg/0/0/1305196040042_1.jpg
+    //format is: facimg/0/0/1305196040042_1.jpg
     var re = /^facimg\/([0-9a-f])\/([0-9]+)\/([0-9_]+\.jpg)$/;
     var match = re.exec(original_key);
     if (match) {
         var size = size_sel(match[2]);
         var photo = match[3];
         var dest_key = size + '/' + photo;
-        bucket.copyTo(original_key, 'nmisfac', dest_key).end();
+        bucket.copyTo(original_key, 'nmisfac', dest_key, function(err, ret) {
+            if (err) {
+                console.log(err);
+            }
+        }).end();
     }
 };
 
-var run_copy = function(){
+var run_copy = function(start){
+    if (!start) {
+        start = '';
+    }
     var formhub = load_bucket('formhub');
-    var lister = new s3Lister(formhub, {prefix: 'ossap'});
+    var lister = new s3Lister(formhub, {
+        prefix: 'ossap',
+        start: start
+    });
     var counter = 0;
     lister
+        .on('error', function (err){
+            console.log(err);
+        })
         .on('data', function (data){
             copy_data(data.Key, formhub);
             counter++;
-            console.log(counter);
-        })
-        .on('error', function (err){
-            console.log(err);
+            console.log(counter, data.Key);
         })
         .on('end', function () {
             console.log('done');
     });
 };
 
-var run_copy_nmisstatic = function() {
+var run_copy_nmisstatic = function(start) {
     var nmisstatic = load_bucket('nmisstatic');
-    var lister = new s3Lister(nmisstatic, {prefix: 'facimg'});
+    var lister = new s3Lister(nmisstatic, {
+        prefix: 'facimg',
+        start: start
+    });
     var counter = 0;
     lister
+        .on('error', function (err){
+            console.log(err);
+        })
         .on('data', function(data) {
             copy_data_nmisstatic(data.Key, nmisstatic);
             counter++;
-            console.log(counter);
-        })
-        .on('error', function (err){
-            console.log(err);
+            console.log(counter, data.Key);
         })
         .on('end', function () {
             console.log('done');
@@ -95,13 +113,17 @@ var run_delete = function(bucket_name, prefix){
     var lister = new s3Lister(bucket, {prefix: '' + prefix});
     var counter = 0;
     lister
-        .on('data', function (data){
-            bucket.del(data.Key).end();
-            counter++;
-            console.log(counter);
-        })
         .on('error', function (err){
             console.log(err);
+        })
+        .on('data', function (data){
+            bucket.del(data.Key, function(err, ret) {
+                if (err) {
+                    console.log(err);
+                }
+            }).end();
+            counter++;
+            console.log(counter);
         })
         .on('end', function () {
             console.log('done');
@@ -109,4 +131,6 @@ var run_delete = function(bucket_name, prefix){
 
 };
 
-run_copy_nmisstatic();
+//run_copy();
+//run_copy_nmisstatic('facimg/8/200/1300983641327.jpg');
+//run_delete('nmisfac', '');

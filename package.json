@@ -6,6 +6,7 @@
     "dependencies": {
       "knox": "*",
       "s3-lister": "*",
-      "underscore": "*"
+      "underscore": "*",
+      "commander": "*"
   }
 }
