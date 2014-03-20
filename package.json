@@ -1,8 +1,8 @@
 {
-    "name": "s3-massage", 
+    "name": "s3-map", 
     "version": "0.0.1", 
     "private": true, 
-    "main": "s3-stream.js",
+    "main": "s3-map.js",
     "dependencies": {
       "knox": "*",
       "s3-lister": "*",
