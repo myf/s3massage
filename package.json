@@ -2,11 +2,12 @@
     "name": "s3-map", 
     "version": "0.0.1", 
     "private": true, 
-    "main": "s3-map.js",
+    "main": "s3run.js",
     "dependencies": {
+      "commander": "*",
+      "findit" : "*",
       "knox": "*",
       "s3-lister": "*",
-      "underscore": "*",
-      "commander": "*"
+      "underscore": "*"
   }
 }
