@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 var program = require('commander');
-var find = require('findit');
 var s3 = require('./lib/s3-map');
 
 

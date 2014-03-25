@@ -7,6 +7,7 @@
       "commander": "*",
       "findit" : "*",
       "knox": "*",
+      "mkdirp" : "*",
       "s3-lister": "*",
       "underscore": "*"
   }
