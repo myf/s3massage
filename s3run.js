@@ -30,12 +30,12 @@ program
     .option('-i, --input <input>', 'specific directory for upload input');
 
 
-add_list_command('list', 'list a bucket with corresponding options', s3.listing);
-add_list_command( 'delete', 'delete a bucket with corresponding options', s3.del);
-add_list_command('download', 'download a bucket with options', s3.download);
+add_list_command('ls', 'list a bucket with corresponding options', s3.listing);
+add_list_command( 'rm', 'delete a bucket with corresponding options', s3.del);
+add_list_command('pull', 'download a bucket with options', s3.download);
 
 program
-    .command('upload <bucket>')
+    .command('push <bucket>')
     .description('uploading a directory to a bucket')
     .action(function(bucket) {
         var dir = program.input;
