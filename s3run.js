@@ -7,7 +7,8 @@ var bucket_curry = function(bucket, func) {
     var prefix = program.prefix || '';
     var start = program.start || '';
     var filter = program.filter || null;
-    return s3.list_map(bucket, prefix, start, filter, function(k,b){
+    var maxKeys = program.maxkeys || 1000;
+    return s3.list_map(bucket, prefix, start, filter, maxKeys, function(k,b){
         return func(k, b);
     });
 };
@@ -27,7 +28,8 @@ program
     .option('-s, --start <start>', 'select a start string')
     .option('-f, --filter <filter>', 'select a filter string')
     .option('-o, --output <output>', 'specific directory for download output')
-    .option('-i, --input <input>', 'specific directory for upload input');
+    .option('-i, --input <input>', 'specific directory for upload input')
+    .option('-m, --maxkeys <maxkeys>', 'specific maxkeys per stream');
 
 
 add_list_command('ls', 'list a bucket with corresponding options', s3.listing);
