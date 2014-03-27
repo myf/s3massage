@@ -4,11 +4,12 @@ var s3 = require('./lib/s3-map');
 
 
 var bucket_curry = function(bucket, func) {
-    var prefix = program.prefix || '';
-    var start = program.start || '';
-    var filter = program.filter || null;
-    var maxKeys = program.maxkeys || 1000;
-    return s3.list_map(bucket, prefix, start, filter, maxKeys, function(k,b){
+    var opts = {};
+    opts.prefix = program.prefix || '';
+    opts.start = program.start || '';
+    opts.filter = program.filter || null;
+    opts.maxKeys = program.maxkeys || 1000;
+    return s3.list_map(bucket, opts, function(k,b){
         return func(k, b);
     });
 };
