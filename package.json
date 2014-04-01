@@ -5,11 +5,10 @@
     "main": "s3run.js",
     "dependencies": {
       "commander": "*",
-      "findit" : "*",
       "knox": "*",
       "mkdirp" : "*",
       "s3-lister": "*",
-      "walk": "*",
-      "underscore": "*"
+      "underscore": "*",
+      "walk": "*"
   }
 }
