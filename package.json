@@ -9,6 +9,7 @@
       "knox": "*",
       "mkdirp" : "*",
       "s3-lister": "*",
+      "walk": "*",
       "underscore": "*"
   }
 }
