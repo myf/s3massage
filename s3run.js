@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 var program = require('commander');
 var s3 = require('./lib/s3-map');
+var fs = require('fs');
 
 
 var bucket_curry = function(bucket, func) {
@@ -22,6 +23,12 @@ var add_list_command = function(name, desc, action) {
             return bucket_curry(bucket, action);
         });
 };
+
+var sys_err = fs.createWriteStream('sys_error.log');
+process.on('uncaughtExceptions', function(err) {
+    sys_err.write(err + '\n');
+});
+
 
 program
     .version('0.0.1')
@@ -47,3 +54,4 @@ program
 
 
 program.parse(process.argv);
+
