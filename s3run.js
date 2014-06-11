@@ -49,8 +49,8 @@ program
 
 var d = domain.create();
 
+var sys_err = fs.createWriteStream('sys_error.log');
 d.on('error', function(err) {
-    var sys_err = fs.createWriteStream('sys_error.log');
     sys_err.write(err + '\n');
 });
 
