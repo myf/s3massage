@@ -47,6 +47,18 @@ program
         return s3.upload(bucket, dir);
     });
 
+program
+    .command('cp <bucket_from> <bucket_to>')
+    .description('copying bucket from one directory to another')
+    .action(function(bucket_from, bucket_to) {
+        var opts = {};
+        opts.prefix = program.prefix || '';
+        opts.start = program.start || '';
+        opts.filter = program.filter || null;
+        opts.maxKeys = program.maxkeys || 1000;
+        return s3.copy(bucket_from, bucket_to, opts)
+    });
+
 var d = domain.create();
 
 var sys_err = fs.createWriteStream('sys_error.log');
