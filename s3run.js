@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 var program = require('commander');
 var s3 = require('./lib/s3-map');
+var fs = require('fs');
+var domain = require('domain');
 
 
 var bucket_curry = function(bucket, func) {
@@ -45,5 +47,14 @@ program
         return s3.upload(bucket, dir);
     });
 
+var d = domain.create();
 
-program.parse(process.argv);
+var sys_err = fs.createWriteStream('sys_error.log');
+d.on('error', function(err) {
+    sys_err.write(err + '\n');
+});
+
+d.run(function() {
+    program.parse(process.argv);
+});
+
