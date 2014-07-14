@@ -11,6 +11,8 @@ var bucket_curry = function(bucket, func) {
     opts.start = program.start || '';
     opts.filter = program.filter || null;
     opts.maxKeys = program.maxkeys || 1000;
+    opts.tryCounts = program.tryCounts || 5;
+    opts.delay = program.delay || 1000; //ms
     return s3.list_map(bucket, opts, function(k,b){
         return func(k, b);
     });
@@ -32,7 +34,9 @@ program
     .option('-f, --filter <filter>', 'select a filter string')
     .option('-o, --output <output>', 'specific directory for download output')
     .option('-i, --input <input>', 'specific directory for upload input')
-    .option('-m, --maxkeys <maxkeys>', 'specific maxkeys per stream');
+    .option('-m, --maxkeys <maxkeys>', 'specific maxkeys per stream')
+    .option('-t, --tryCounts <tryCounts>', 'specific number of tries before fail')
+    .option('-d, --delay <delay>', 'specific delays after each try');
 
 
 add_list_command('ls', 'list a bucket with corresponding options', s3.listing);
