@@ -13,8 +13,8 @@ var bucket_curry = function(bucket, func) {
     opts.maxKeys = program.maxkeys || 1000;
     opts.tryCounts = program.tryCounts || 5;
     opts.delay = program.delay || 1000; //ms
-    return s3.list_map(bucket, opts, function(k,b){
-        return func(k, b);
+    return s3.list_map(bucket, opts, function(k, b, t, d){
+        return func(k, b, t, d);
     });
 };
 
@@ -63,14 +63,14 @@ program
         return s3.copy(bucket_from, bucket_to, opts)
     });
 
-var d = domain.create();
-
-var sys_err = fs.createWriteStream('sys_error.log');
-d.on('error', function(err) {
-    sys_err.write(err + '\n');
-});
-
-d.run(function() {
+//var d = domain.create();
+//
+//var sys_err = fs.createWriteStream('sys_error.log');
+//d.on('error', function(err) {
+//    sys_err.write(err + '\n');
+//});
+//
+//d.run(function() {
     program.parse(process.argv);
-});
+//});
 
