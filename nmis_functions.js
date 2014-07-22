@@ -82,22 +82,25 @@ var size_sel = function(size) {
         case "90":
             return "small";
         case "0":
-            return "original";
+            return "";
     }
 };
 
 var copy_data_nmisstatic =  function(original_key, bucket) {
     //format is: facimg/0/0/1305196040042_1.jpg
-    var re = /^facimg\/([0-9a-f])\/([0-9]+)\/([0-9_]+\.jpg)$/;
+    var re = /^facimg\/([0-9a-f])\/([0-9]+)\/([0-9_]+)\.jpg$/;
     var match = re.exec(original_key);
     if (match) {
         var size = size_sel(match[2]);
         var photo = match[3];
-        var dest_key = size + '/' + photo;
-        bucket.copyTo(original_key, 'nmisfac', dest_key, function(err, ret) {
+        var dest_photo = size == "" ? photo + '.jpg' : photo + '-' + size + '.jpg';
+        var dest_key = 'formhub-ossap/ossap/attachments/' + dest_photo;
+        console.log(dest_key)
+        bucket.copyTo(original_key, dest_key, function(err, ret) {
             if (err) {
                 console.log(err);
             }
+            console.log(dest_key, 'registered')
         }).end();
     }
 };
@@ -125,4 +128,6 @@ var run_delete = function(bucket_name, prefix){
 
 };
 
-
+list_map('nmisstatic', 'facimg/', '', function(k, b){
+    copy_data_nmisstatic(k, b)
+});
