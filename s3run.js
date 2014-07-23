@@ -38,6 +38,7 @@ program
 add_list_command('ls', 'list a bucket with corresponding options', s3.listing);
 add_list_command( 'rm', 'delete a bucket with corresponding options', s3.del);
 add_list_command('pull', 'download a bucket with options', s3.download);
+add_list_command('copynmis', 'download a bucket with options', s3.copy_data_nmisstatic);
 
 program
     .command('push <bucket>')
