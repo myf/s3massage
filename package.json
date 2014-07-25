@@ -3,6 +3,9 @@
     "version": "0.0.1", 
     "private": true, 
     "main": "s3run.js",
+    "bin": {
+       "s3m": "s3run.js" 
+    },
     "dependencies": {
       "commander": "*",
       "knox": "*",
