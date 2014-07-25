@@ -59,14 +59,14 @@ program
         return s3.copy(bucket_from, bucket_to, opts)
     });
 
-//var d = domain.create();
-//
-//var sys_err = fs.createWriteStream('sys_error.log');
-//d.on('error', function(err) {
-//    sys_err.write(err + '\n');
-//});
-//
-//d.run(function() {
+var d = domain.create();
+
+var sys_err = fs.createWriteStream('sys_error.log');
+d.on('error', function(err) {
+    sys_err.write(err + '\n');
+});
+
+d.run(function() {
     program.parse(process.argv);
-//});
+});
 
