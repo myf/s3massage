@@ -3,6 +3,7 @@ var program = require('commander');
 var s3 = require('./lib/s3-map');
 var fs = require('fs');
 var domain = require('domain');
+var util = require('util');
 
 
 var bucket_curry = function(bucket, func) {
@@ -58,6 +59,30 @@ program
         opts.maxKeys = program.maxkeys || 1000;
         return s3.copy(bucket_from, bucket_to, opts)
     });
+
+program
+    .command('cpl <local_file> <bucket_from> <bucket_to>')
+    .description('copying directory from one bucket to another with local_file')
+    .action(function(local_file, bucket_from, bucket_to) {
+        var dest_options = {bucket: bucket_to};
+        return s3.list_local(bucket_from, local_file, function(k,b) {
+                s3.logfile.write(util.format("copying", k, "to", bucket_to, '\n'));
+                b.copyTo(k, bucket_to, k).on('response', function(res) {
+                    //s3.logfile.write(util.format(res, '\n')); 
+                }).end();
+            });
+    });
+
+
+program
+    .command('pl <bucket> <local_file>')
+    .description('download bucket from a local log')
+    .action(function(bucket, local_file) {
+        return s3.list_local(bucket, local_file, function(k,b) {
+            return s3.download(k,b);
+        })
+    })
+
 
 var d = domain.create();
 

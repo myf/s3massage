@@ -11,6 +11,7 @@
       "knox": "*",
       "mkdirp" : "*",
       "s3-lister": "*",
+      "split": "*",
       "walk": "*"
   }
 }
