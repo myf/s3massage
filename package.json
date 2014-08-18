@@ -1,9 +1,13 @@
 {
-    "name": "s3-map", 
-    "version": "0.0.1", 
+    "name": "s3m",
+    "version": "0.0.1-alpha", 
     "main": "index.js",
     "bin": {
        "s3m": "index.js" 
+    },
+    "author": {
+        "name": "Myf Ma",
+        "email": "myf@worldtalks.org"
     },
     "dependencies": {
       "commander": "*",
@@ -13,4 +17,18 @@
       "split": "*",
       "walk": "*"
   }
+    "keywords": [
+        "s3",
+        "AWS",
+        "amazon",
+        "upload",
+        "download",
+        "copy",
+        "stream",
+        "commandline"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/myf/s3massage.git"
+    }
 }
