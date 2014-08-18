@@ -1,10 +1,9 @@
 {
     "name": "s3-map", 
     "version": "0.0.1", 
-    "private": true, 
-    "main": "s3run.js",
+    "main": "index.js",
     "bin": {
-       "s3m": "s3run.js" 
+       "s3m": "index.js" 
     },
     "dependencies": {
       "commander": "*",
