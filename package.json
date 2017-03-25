@@ -1,6 +1,6 @@
 {
     "name": "s3m",
-    "version": "0.0.1-beta", 
+    "version": "1.0.0", 
     "description": "yet another s3 commandline tool using stream for concurrency",
     "main": "index.js",
     "bin": {
